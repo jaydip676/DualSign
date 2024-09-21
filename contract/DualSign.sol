@@ -328,4 +328,6 @@ contract DualSign is EIP712, Ownable {
                 feeToken: _feeTokenAddress
             });
     }
+
+    receive() external payable {}
 }

@@ -171,7 +171,7 @@ const InitiateTransaction: React.FC = () => {
                 domain: {
                     name: "DualSign",
                     version: "1",
-                    chainId: BigInt(selectedNetwork),
+                    chainId: BigInt(421614),
                     verifyingContract: "0xAb3059Ea16Fe462c747E85720024023BaF15d675", //contract address
                 },
                 types: {

@@ -7,7 +7,7 @@ import { arbitrumSepolia } from "viem/chains";
 
 const publicClient: PublicClient = createPublicClient({
     chain: arbitrumSepolia,
-    transport: http("https://pre-rpc.bittorrentchain.io/"), // Passing RPC URL to http function
+    transport: http(""), // Passing RPC URL to http function
 });
 
 let walletClient: WalletClient | undefined;
@@ -40,7 +40,7 @@ export const approveToken = async (amount: bigint, tokenContractAddress: Address
         address: tokenContractAddress,
         abi: erc20Abi.abi,
         functionName: "approve",
-        args: ["0xeD14905ddb05D6bD36De98aCAa8D7AaF01851E5A" as Address, amount],
+        args: ["0xAb3059Ea16Fe462c747E85720024023BaF15d675" as Address, amount],
     });
 
     if (!walletClient) {
@@ -72,7 +72,7 @@ const readAllowance = async (tokenContractAddress: Address, ownerAddress: Addres
         address: tokenContractAddress,
         abi: erc20Abi.abi,
         functionName: "allowance",
-        args: [ownerAddress, "0xeD14905ddb05D6bD36De98aCAa8D7AaF01851E5A" as Address],
+        args: [ownerAddress, "0xAb3059Ea16Fe462c747E85720024023BaF15d675" as Address],
     });
 
     return result as bigint;

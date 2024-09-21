@@ -31,9 +31,7 @@ interface Transaction {
     amount: string;
 }
 
-interface InitiateTransactionProps {
-    onClose: () => void;
-}
+
 
 interface FormErrors {
     receiver?: string[];
@@ -42,7 +40,7 @@ interface FormErrors {
     secretpin?: string[];
 }
 
-const InitiateTransaction: React.FC<InitiateTransactionProps> = ({ onClose }) => {
+const InitiateTransaction: React.FC = () => {
     const { address, isConnected } = useAccount();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isLoadingToken, setIsLoadingToken] = useState<boolean>(false);
@@ -239,7 +237,6 @@ const InitiateTransaction: React.FC<InitiateTransactionProps> = ({ onClose }) =>
                     console.log("entered into try block");
                     toast.success("Signed Successfully");
                     setIsLoading(false);
-                    onClose();
                 } catch (error) {
                     toast.error("Error while signing");
                     setIsLoading(false);

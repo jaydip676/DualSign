@@ -23,6 +23,7 @@ interface PutTransactionRequest {
   receiverSignature: string;
   status: string;
   approveDate: string;
+  receiversAttestationId: string;
 }
 
 export async function POST(req: Request) {
@@ -102,6 +103,7 @@ export async function PUT(req: Request) {
     receiverSignature,
     status,
     approveDate,
+    receiversAttestationId,
   }: PutTransactionRequest = await req.json();
 
   // Connect to MongoDB
@@ -120,6 +122,7 @@ export async function PUT(req: Request) {
           receiverSignature,
           status,
           approveDate,
+          receiversAttestationId,
         },
       }
     );

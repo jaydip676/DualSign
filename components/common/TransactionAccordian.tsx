@@ -32,6 +32,7 @@ import { approveToken } from "@/components/common/ApproveToken";
 import { arbitrumSepolia } from "viem/chains";
 import Timestamp from "./Timestamp";
 import AccordianExpanded from "./AccordianExpanded";
+import RequestModal from "./RequestModal";
 
 // Define interfaces for better type checking
 export interface Transaction {
@@ -48,7 +49,8 @@ export interface Transaction {
   senderSignature: string;
   receiverSignature: string;
   chainId: string;
-  attestationId?: string;
+  attestationId: string;
+  receiversAttestationId?: string;
 }
 
 interface TransactionAccordionProps {
@@ -129,6 +131,10 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [isRejectedBtn, setIsRejectedBtn] = useState<number>(-1);
+  const [secretPin, setSecretPin] = useState<number>(0);
+  const [pinPopup, setpinPopup] = useState<boolean>(false);
+  const [selectedTxForReceiver, setSelectedTxForReceiver] = useState<number>(-1);
+  const [txStatus, setTxStatus] = useState<'accept' | 'execute'>("accept")
   const { address } = useAccount();
 
   // const handleAttest = async (sign: string) => {
@@ -157,7 +163,30 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
 
   //     return attestationInfo;
   // };
-  const signTransaction = async (transaction: Transaction) => {
+
+  const handleAttest2 = async (attestationId: string, sign: string, sendersAddress: string) => {
+
+    const client = new SignProtocolClient(SpMode.OffChain, {
+      signType: OffChainSignType.EvmEip712,
+      rpcUrl: OffChainRpc.testnet,
+      walletClient: walletClient,
+    });
+
+    const schemahex = await client.getSchema("SPS_y1zxOprOuzfDK-XkDtNBV");
+    console.log(schemahex);
+    const attestationInfo = await client.createAttestation({
+      schemaId: "SPS_y1zxOprOuzfDK-XkDtNBV",
+      data: {
+        senderSchema: attestationId,
+        sign: sign
+      },
+      indexingValue: sendersAddress,
+      recipients: [sendersAddress],
+    });
+    console.log(attestationInfo);
+    return attestationInfo;
+  };
+  const signTransaction = async (transaction: Transaction, secretPin: number) => {
     console.log(transaction);
     try {
       setIsLoading(true);
@@ -172,7 +201,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
         domain: {
           name: "DualSign",
           version: "1",
-          chainId: 421614,
+          chainId: BigInt(421614),
           verifyingContract: "0x1302017D2d3aA9Fe213cd7F9fa76d9299722690E", //contract address
         },
         types: {
@@ -198,17 +227,19 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
           amount: transaction.amount,
           tokenName: transaction.tokenName,
           chainId: BigInt(transaction.chainId), // get chain id from attestation
-          secretPin: BigInt(1234), // get it from the user input
+          secretPin: BigInt(secretPin), // get it from the user input
         },
       });
       const currentDate = new Date();
       console.log("Signature:", signature);
       if (signature) {
+        const attestationInfo = await handleAttest2(transaction.attestationId, transaction.senderSignature, transaction.senderAddress)
         const userData = {
           TransactionId: transaction.TransactionId, // This should be passed in the request to identify the transaction to update
           receiverSignature: signature,
           status: "approved",
           approveDate: currentDate,
+          receiversAttestationId: attestationInfo.attestationId
         };
         console.log(userData);
         try {
@@ -271,7 +302,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
     }
   };
 
-  const executeTransaction = async (transaction: Transaction) => {
+  const executeTransaction = async (transaction: Transaction, secretPin: number) => {
     setIsLoading(true);
     console.log(transaction.amount);
     try {
@@ -283,8 +314,8 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
           ? transaction.tokenAddress
           : "0x1302017D2d3aA9Fe213cd7F9fa76d9299722690E",
         transaction.tokenName,
-        "84532",
-        "1234",
+        transaction.chainId,
+        secretPin,
       ];
 
       console.log(TransactionDetails);
@@ -305,7 +336,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
       console.log(TransactionDetails);
 
       const { request } = await publicClient.simulateContract({
-        account: address as Address,
+        account: address ? address : undefined,
         address: "0x1302017D2d3aA9Fe213cd7F9fa76d9299722690E",
         abi: dualsignABI,
         functionName: functionCalled,
@@ -315,7 +346,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
           TransactionDetails,
         ],
         ...(functionCalled === "transferNative"
-          ? { value: transaction.amount.toString() }
+          ? { value: transaction.amount }
           : {}),
       });
       console.log(request);
@@ -374,7 +405,10 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
       transaction.senderAddress === address &&
       transaction.status === "approved"
     ) {
-      await executeTransaction(transaction);
+      setTxStatus("accept")
+      setSelectedTxForReceiver(index)
+      setpinPopup(true)
+      // await executeTransaction(transaction);
     }
 
     if (
@@ -382,9 +416,22 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
       transaction.receiverAddress === address &&
       transaction.status === "inititated"
     ) {
-      await signTransaction(transaction);
+
+      setTxStatus("execute")
+      setSelectedTxForReceiver(index)
+      setpinPopup(true)
+
     }
+
   };
+
+  const handleRequestAccept = async (secretPin: number) => {
+    await signTransaction(transactions[selectedTxForReceiver], secretPin);
+  }
+
+  const handleExecutionTx = async (secretPin: number) => {
+    await executeTransaction(transactions[selectedTxForReceiver], secretPin);
+  }
 
   return (
     <div className="accordian-parent">
@@ -412,11 +459,10 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
                       viewBox="0 0 16 16"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
-                      className={`${
-                        transaction.senderAddress === address
-                          ? "send"
-                          : "receive"
-                      }`}
+                      className={`${transaction.senderAddress === address
+                        ? "send"
+                        : "receive"
+                        }`}
                     >
                       <path
                         fillRule="evenodd"
@@ -456,52 +502,52 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
                     {transaction.status === "inititated"
                       ? "1 out of 3"
                       : transaction.status === "approved"
-                      ? "2 out of 3"
-                      : transaction.status === "completed"
-                      ? "3 out of 3"
-                      : "0 out of 3"}
+                        ? "2 out of 3"
+                        : transaction.status === "completed"
+                          ? "3 out of 3"
+                          : "0 out of 3"}
                   </div>
                 </CustomGridItem>
                 <CustomGridItem item xs={2} sm={2} md={2}>
                   <button
                     className={
                       address &&
-                      transaction.senderAddress === address &&
-                      transaction.status === "inititated"
+                        transaction.senderAddress === address &&
+                        transaction.status === "inititated"
                         ? "waiting-action-btn action-btn"
                         : transaction.senderAddress === address &&
                           transaction.status === "approved"
-                        ? "execute-action-btn action-btn"
-                        : transaction.receiverAddress === address &&
-                          transaction.status === "inititated"
-                        ? "execute-action-btn action-btn"
-                        : transaction.status === "completed"
-                        ? "completed-action-btn action-btn"
-                        : transaction.status === "rejected"
-                        ? "rejected-action-btn action-btn pointer-none"
-                        : "waiting-action-btn action-btn"
+                          ? "execute-action-btn action-btn"
+                          : transaction.receiverAddress === address &&
+                            transaction.status === "inititated"
+                            ? "execute-action-btn action-btn"
+                            : transaction.status === "completed"
+                              ? "completed-action-btn action-btn"
+                              : transaction.status === "rejected"
+                                ? "rejected-action-btn action-btn pointer-none"
+                                : "waiting-action-btn action-btn"
                     }
                     onClick={() => handleActionButtonClick(transaction, index)}
                   >
                     {isLoading &&
-                    isRejectedBtn !== index &&
-                    selectedIndex === index
+                      isRejectedBtn !== index &&
+                      selectedIndex === index
                       ? "Loading..."
                       : address &&
                         transaction.senderAddress === address &&
                         transaction.status === "inititated"
-                      ? "Waiting"
-                      : transaction.senderAddress === address &&
-                        transaction.status === "approved"
-                      ? "Execute"
-                      : transaction.receiverAddress === address &&
-                        transaction.status === "inititated"
-                      ? "Approve"
-                      : transaction.status === "rejected"
-                      ? "Rejected"
-                      : transaction.status === "completed"
-                      ? "Completed"
-                      : "waiting"}
+                        ? "Waiting"
+                        : transaction.senderAddress === address &&
+                          transaction.status === "approved"
+                          ? "Execute"
+                          : transaction.receiverAddress === address &&
+                            transaction.status === "inititated"
+                            ? "Approve"
+                            : transaction.status === "rejected"
+                              ? "Rejected"
+                              : transaction.status === "completed"
+                                ? "Completed"
+                                : "waiting"}
                   </button>
                 </CustomGridItem>
               </Grid>
@@ -537,6 +583,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
           </CustomAccordionSummary>
         </CustomAccordion>
       )}
+      {pinPopup ? <RequestModal handleExecutionTx={handleExecutionTx} handleRequestAccept={handleRequestAccept} onClose={() => setpinPopup(false)} status={txStatus} /> : null}
     </div>
   );
 };

@@ -136,7 +136,7 @@ const InitiateTransaction: React.FC = () => {
         // age: 24,
       },
       recipients: [transaction.receiver],
-      indexingValue: "0",
+      indexingValue: transaction.sender,
     });
     console.log(attestationInfo);
 
@@ -284,11 +284,10 @@ const InitiateTransaction: React.FC = () => {
                   type="text"
                   name="receiver"
                   placeholder="Enter Receiver's Address"
-                  className={`w-full bg-transparent p-3 border rounded-lg text-black ${
-                    errorDisplay && errors?.receiver
+                  className={`w-full bg-transparent p-3 border rounded-lg text-black ${errorDisplay && errors?.receiver
                       ? "border-red-500"
                       : "border-[#2d2d2d]"
-                  }`}
+                    }`}
                   value={transaction.receiver || ""}
                   onChange={handleInputChange}
                 />
@@ -318,11 +317,10 @@ const InitiateTransaction: React.FC = () => {
                   Do you want to send ERC-20 token?
                 </label>
                 <div
-                  className={`flex items-center cursor-pointer w-full p-3 border rounded-lg text-black ${
-                    errorDisplay && errorLoadToken
+                  className={`flex items-center cursor-pointer w-full p-3 border rounded-lg text-black ${errorDisplay && errorLoadToken
                       ? "border-red-500"
                       : "border-[#2d2d2d]"
-                  }`}
+                    }`}
                   onClick={handleCheckboxChange}
                 >
                   <input
@@ -345,11 +343,10 @@ const InitiateTransaction: React.FC = () => {
                         type="text"
                         name="token"
                         placeholder="Enter Token Address"
-                        className={`w-full bg-transparent p-3 border rounded-lg text-black ${
-                          errorDisplay && errorLoadToken
+                        className={`w-full bg-transparent p-3 border rounded-lg text-black ${errorDisplay && errorLoadToken
                             ? "border-red-500"
                             : "border-[#2d2d2d]"
-                        }`}
+                          }`}
                         value={transaction.token || ""}
                         onChange={handleInputChange}
                       />
@@ -401,11 +398,11 @@ const InitiateTransaction: React.FC = () => {
                       <span className="text-black text-xl font-bold">
                         {tokenDetails.balance
                           ? `${formatUnits(
-                              tokenDetails.balance,
-                              tokenDetails.decimals
-                                ? parseInt(tokenDetails.decimals)
-                                : 18
-                            )} ${tokenDetails.symbol}`
+                            tokenDetails.balance,
+                            tokenDetails.decimals
+                              ? parseInt(tokenDetails.decimals)
+                              : 18
+                          )} ${tokenDetails.symbol}`
                           : null}
                       </span>
                     </span>
@@ -421,11 +418,10 @@ const InitiateTransaction: React.FC = () => {
                   type="text"
                   name="amount"
                   placeholder="Enter Amount"
-                  className={`w-full bg-transparent p-3 border rounded-lg text-black ${
-                    errorDisplay && errors?.amount
+                  className={`w-full bg-transparent p-3 border rounded-lg text-black ${errorDisplay && errors?.amount
                       ? "border-red-500"
                       : "border-[#2d2d2d]"
-                  }`}
+                    }`}
                   value={transaction.amount || ""}
                   onChange={handleInputChange}
                 />
@@ -443,11 +439,10 @@ const InitiateTransaction: React.FC = () => {
                   type="number"
                   name="secretpin"
                   placeholder="Enter Secret Pin"
-                  className={`w-full bg-transparent p-3 border rounded-lg text-black ${
-                    errorDisplay && errors?.secretpin
+                  className={`w-full bg-transparent p-3 border rounded-lg text-black ${errorDisplay && errors?.secretpin
                       ? "border-red-500"
                       : "border-[#2d2d2d]"
-                  }`}
+                    }`}
                   value={secretPin || ""}
                   onChange={(e) => setSecretPin(e.target.valueAsNumber)}
                 />

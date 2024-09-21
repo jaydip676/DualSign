@@ -6,6 +6,7 @@ import AddressWithCopy from "@/components/common/AddressWithCopy";
 import Blockies from "react-blockies";
 import { useAccount } from "wagmi";
 import { Transaction } from "./TransactionAccordian";
+import Link from "next/link";
 
 
 
@@ -60,15 +61,15 @@ const AccordianExpanded: React.FC<AccordianExpandedProps> = ({
                         </div>
                         <div className="flex w-4/5">
                             <div className="flex flex-col justify-start items-start gap-2 mt-8">
-                                <div className="label">Nonce:</div>
-                                <div className="label">Transaction Hash:</div>
+                                <div className="label">Sender's Attestation:</div>
+                                <div className="label">Receiver's Attestation:</div>
                                 <div className="label">Initiated Date:</div>
                                 <div className="label">Status:</div>
                                 <div className="label">Sender:</div>
                             </div>
                             <div className="flex flex-col justify-start items-start gap-2 mt-8 ml-6">
-                                <div className="value font-semibold capitalize">{transaction.nonce}</div>
-                                <div className="value font-semibold capitalize">txHash</div>
+                                <div className="value font-semibold capitalize"><Link className="text-[#f38744]" href={`https://testnet-scan.sign.global/attestation/${transaction.attestationId}`} target="_blanck">Link</Link></div>
+                                <div className="value font-semibold capitalize">{transaction.receiversAttestationId ? <Link className="text-[#f38744]" href={`https://testnet-scan.sign.global/attestation/${transaction.receiversAttestationId}`} target="_blanck">Link</Link> : "-"}</div>
                                 <div className="value font-semibold capitalize">{transaction.initiateDate}</div>
                                 <div className="value font-semibold capitalize">{transaction.status}</div>
                                 <div className="value flex items-center">

@@ -161,14 +161,6 @@ const InitiateTransaction: React.FC<InitiateTransactionProps> = ({ onClose }) =>
         try {
             formSchemaTransaction.parse(formData);
             setIsLoading(true);
-
-
-            // const url = `/api/latest-nonce?address=${address}`;
-
-            // const response = await fetch(url);
-            // const data = await response.json();
-            // console.log(data);
-            // let nonce = parseInt(data.nonce) + 1;
             var amount: any = transaction.amount;
             if (isERC20) {
                 amount = parseUnits(transaction.amount, parseInt(tokenDetails.decimals ? tokenDetails.decimals : ""));
@@ -232,15 +224,6 @@ const InitiateTransaction: React.FC<InitiateTransactionProps> = ({ onClose }) =>
                 await handleAttest(signature);
                 try {
                     console.log("entered into try block");
-
-
-                    // let result = await fetch(`api/store-transaction`, {
-                    //     method: "POST",
-                    //     body: JSON.stringify(userData),
-                    // });
-                    // const response = await result.json();
-
-
                     toast.success("Signed Successfully");
                     setIsLoading(false);
                     onClose();

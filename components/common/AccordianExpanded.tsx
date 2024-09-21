@@ -87,23 +87,23 @@ const AccordianExpanded: React.FC<AccordianExpandedProps> = ({
                 <div className="min-w-[30%]">
                     <div className="process p-8 font-dmsans">
                         <ul className="list-none p-0 m-0 flex flex-col">
-                            <li className={`step ${["inititated", "approved", "completed", "rejected"].includes(transaction.status) ? "completed" : ""}`}>
-                                <div className="name flex items-center text-gray-600 font-bold text-base">
+                            <li className={`step flex items-center ${["inititated", "approved", "completed", "rejected"].includes(transaction.status) ? "text-black font-bold" : "text-gray-600"} relative mb-6`}>
+                                <div className={`name flex items-center before:inline-block before:mr-2 before:w-4 before:h-4 before:rounded-full ${["inititated", "approved", "completed", "rejected"].includes(transaction.status) ? "before:bg-black before:text-white before:content-['✔']" : "before:bg-gray-300"}`}>
                                     Request Initiated
                                 </div>
                             </li>
-                            <li className={`step ${transaction.status === "inititated" ? "current" : ""} ${["approved", "completed"].includes(transaction.status) ? "completed" : ""}`}>
-                                <div className="name flex items-center text-gray-600 font-bold text-base">
+                            <li className={`step flex items-center ${transaction.status === "inititated" || ["approved", "completed"].includes(transaction.status) ? "text-black font-bold" : "text-gray-600"} relative mb-6`}>
+                                <div className={`name flex items-center before:inline-block before:mr-2 before:w-4 before:h-4 before:rounded-full ${transaction.status === "inititated" ? "before:bg-black before:shadow-pulse" : ["approved", "completed"].includes(transaction.status) ? "before:bg-black before:text-white before:content-['✔']" : "before:bg-gray-300"}`}>
                                     {["approved", "completed"].includes(transaction.status) ? "Approved" : "Waiting for Receiver's Approval"}
                                 </div>
                             </li>
-                            <li className={`step ${transaction.status === "approved" ? "current" : ""} ${transaction.status === "completed" ? "completed" : ""}`}>
-                                <div className="name flex items-center text-gray-600 font-bold text-base">
+                            <li className={`step flex items-center ${transaction.status === "approved" || transaction.status === "completed" ? "text-black font-bold" : "text-gray-600"} relative mb-6`}>
+                                <div className={`name flex items-center before:inline-block before:mr-2 before:w-4 before:h-4 before:rounded-full ${transaction.status === "approved" ? "before:bg-black before:shadow-pulse" : transaction.status === "completed" ? "before:bg-black before:text-white before:content-['✔']" : "before:bg-gray-300"}`}>
                                     {["approved", "inititated", "rejected"].includes(transaction.status) ? "Waiting for Sender to Execute" : transaction.status === "completed" ? "Executed" : null}
                                 </div>
                             </li>
-                            <li className={`step ${["rejected", "completed"].includes(transaction.status) ? "completed" : ""}`}>
-                                <div className="name flex items-center text-gray-600 font-bold text-base">
+                            <li className={`step flex items-center ${["rejected", "completed"].includes(transaction.status) ? "text-black font-bold" : "text-gray-600"} relative mb-6`}>
+                                <div className={`name flex items-center before:inline-block before:mr-2 before:w-4 before:h-4 before:rounded-full ${["rejected", "completed"].includes(transaction.status) ? "before:bg-black before:text-white before:content-['✔']" : "before:bg-gray-300"}`}>
                                     {transaction.status === "rejected" ? "Rejected" : "Completed"}
                                 </div>
                             </li>

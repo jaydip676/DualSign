@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -41,6 +40,8 @@ export interface Transaction {
     status: string;
     senderSignature: string;
     receiverSignature: string;
+    chainId?: string;
+    attestationId?: string;
 }
 
 interface TransactionAccordionProps {
@@ -178,7 +179,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({ transaction
                 try {
                     console.log("entered into try block");
                     let result = await fetch(
-                        `${process.env.NEXT_PUBLIC_APP_URL}api/store-transaction`,
+                        "/api/store-transaction",
                         {
                             method: "PUT",
                             body: JSON.stringify(userData),
@@ -219,7 +220,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({ transaction
         try {
             console.log("entered into try block");
             let result = await fetch(
-                `${process.env.NEXT_PUBLIC_APP_URL}api/store-transaction`,
+                "api/store-transaction",
                 {
                     method: "PUT",
                     body: JSON.stringify(userData),
@@ -299,7 +300,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({ transaction
                 try {
                     console.log("entered into try block");
                     let result = await fetch(
-                        `${process.env.NEXT_PUBLIC_APP_URL}api/payment-completed`,
+                        "api/payment-completed",
                         {
                             method: "PUT",
                             body: JSON.stringify(userData),
@@ -356,7 +357,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({ transaction
     return (
         <div className="accordian-parent">
             {transactions.length > 0 &&
-                transactions.map((transaction, index) => (
+                transactions.map((transaction: Transaction, index: number) => (
                     <CustomAccordion key={index} classes={"muiTopContainer"}>
                         <CustomAccordionSummary
                             expandIcon={<ExpandMoreIcon />}
@@ -369,7 +370,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({ transaction
                                 columns={{ xs: 6, sm: 10, md: 10 }}
                             >
                                 <CustomGridItem item xs={2} sm={1} md={1}>
-                                    <div>{transaction.nonce}</div>
+                                    <div>{index + 1}</div>
                                 </CustomGridItem>
                                 <CustomGridItem item xs={2} sm={2} md={2}>
                                     <div className="senderOrReceiverOnAccordian">
@@ -385,8 +386,8 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({ transaction
                                                 }`}
                                         >
                                             <path
-                                                fill-rule="evenodd"
-                                                clip-rule="evenodd"
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
                                                 d="M9.56854 5.0101H6.9697C6.41462 5.0101 5.96465 4.56012 5.96465 4.00505C5.96465 3.44998 6.41462 3 6.9697 3H11.9949C12.2725 3 12.5237 3.11249 12.7056 3.29437C12.8875 3.47625 13 3.72751 13 4.00505V9.0303C13 9.58538 12.55 10.0354 11.9949 10.0354C11.4399 10.0354 10.9899 9.58538 10.9899 9.0303V6.43146L4.71573 12.7056C4.32323 13.0981 3.68687 13.0981 3.29437 12.7056C2.90188 12.3131 2.90188 11.6768 3.29437 11.2843L9.56854 5.0101Z"
                                                 fill="#F02525"
                                             />

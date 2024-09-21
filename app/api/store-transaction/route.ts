@@ -14,7 +14,8 @@ interface PostTransactionRequest {
   approveDate: string;
   transectionDate: string;
   decimals: number;
-  nonce: number;
+  chainId: string;
+  attestationId: string;
 }
 
 interface PutTransactionRequest {
@@ -38,7 +39,8 @@ export async function POST(req: Request) {
     approveDate,
     transectionDate,
     decimals,
-    nonce,
+    chainId,
+    attestationId,
   }: PostTransactionRequest = await req.json();
 
   // Connect to MongoDB
@@ -75,7 +77,8 @@ export async function POST(req: Request) {
       approveDate,
       transectionDate,
       decimals,
-      nonce,
+      chainId,
+      attestationId,
     });
 
     return NextResponse.json(

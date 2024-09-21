@@ -207,10 +207,16 @@ const InitiateTransaction: React.FC<InitiateTransactionProps> = ({ onClose }) =>
             console.log("Signature:", signature);
             if (signature) {
 
+
+
+                const attestationInfo = await handleAttest(signature);
+                console.log(attestationInfo)
+                console.log("storing data on the db");
+
                 const userData = {
                     senderAddress: address,
                     receiverAddress: transaction.receiver,
-                    amount: amount.toString(),
+                    amount: BigInt(amount).toString(),
                     tokenAddress: transaction.token,
                     senderSignature: signature,
                     receiverSignature: "",
@@ -218,19 +224,17 @@ const InitiateTransaction: React.FC<InitiateTransactionProps> = ({ onClose }) =>
                     tokenName: tokenDetails.symbol !== "" ? tokenDetails.symbol : "ETH",
                     initiateDate: currentDate,
                     decimals: tokenDetails.symbol !== "" ? tokenDetails.decimals : 18,
+                    chainId: BigInt(selectedNetwork).toString(),
+                    attestationId: attestationInfo.attestationId
+
                 };
                 console.log(userData);
-
-                const attestationInfo = await handleAttest(signature);
-                console.log(attestationInfo)
-                console.log("storing data on the db");
-
                 let result = await fetch(`api/store-transaction`, {
                     method: "POST",
                     body: JSON.stringify(userData),
                 });
                 const response = await result.json();
-
+                console.log(response)
                 try {
                     console.log("entered into try block");
                     toast.success("Signed Successfully");

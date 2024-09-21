@@ -11,7 +11,6 @@ export async function GET(req: NextApiRequest) {
   }
   const { searchParams } = new URL(req.url);
   const address = searchParams.get("address") || "";
-  const type = searchParams.get("type") || "";
 
   const client = await MongoClient.connect(
     process.env.NEXT_PUBLIC_MONGODB_URI as string
@@ -22,25 +21,20 @@ export async function GET(req: NextApiRequest) {
   try {
     const query: any = {}; // Use a more specific type if you can define it
 
-    if (type === "queue") {
-      query.$and = [
-        { $or: [{ senderAddress: address }, { receiverAddress: address }] },
-        { $or: [{ status: "inititated" }, { status: "approved" }] },
-      ];
-    } else if (type === "received") {
-      query.receiverAddress = address;
-      query.$or = [{ status: "inititated" }, { status: "approved" }];
-    } else if (type === "history") {
-      query.$and = [
-        { $or: [{ senderAddress: address }, { receiverAddress: address }] },
-        { $or: [{ status: "completed" }, { status: "rejected" }] },
-      ];
-    } else {
-      return NextResponse.json(
-        { message: "Invalid type. Must be 'queue', 'received', or 'history'" },
-        { status: 400 }
-      );
-    }
+    query.$and = [
+      { $or: [{ senderAddress: address }, { receiverAddress: address }] },
+      // { $or: [{ status: "inititated" }, { status: "approved" }] },
+    ];
+
+    // else if (type === "received") {
+    //   query.receiverAddress = address;
+    //   query.$or = [{ status: "inititated" }, { status: "approved" }];
+    // } else if (type === "history") {
+    //   query.$and = [
+    //     { $or: [{ senderAddress: address }, { receiverAddress: address }] },
+    //     { $or: [{ status: "completed" }, { status: "rejected" }] },
+    //   ];
+    // }
 
     const transactions = await collection.find(query).toArray();
 

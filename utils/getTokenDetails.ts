@@ -3,7 +3,7 @@ import { getContract } from "viem";
 import { arbitrumSepolia } from "viem/chains";
 import { parseAbi } from "viem";
 
-import erc20Abi from "./ERC20ABI.json";
+import erc20Abi from "@/contract/ERC20ABI.json";
 
 const publicClient: PublicClient = createPublicClient({
   chain: arbitrumSepolia,

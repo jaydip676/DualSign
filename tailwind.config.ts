@@ -13,7 +13,7 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       boxShadow: {
-        "custom-light": "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+        custom: "rgba(0, 0, 0, 0.4) 0px 30px 90px",
       },
     },
   },

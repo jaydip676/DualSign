@@ -1,19 +1,9 @@
-'use client'
+
 import Header from "@/components/header/Header";
-import InitiateTransaction from "@/components/initiate-request/InitiateRequest";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
   return (
     <>
       <Header />

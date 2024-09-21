@@ -174,7 +174,7 @@ const InitiateTransaction: React.FC<InitiateTransactionProps> = ({ onClose }) =>
                     name: "DualSign",
                     version: "1",
                     chainId: BigInt(selectedNetwork),
-                    verifyingContract: "0x85d3e8b64546483bc372261cd83b7077dfaf7a42", //contract address
+                    verifyingContract: "0xAb3059Ea16Fe462c747E85720024023BaF15d675", //contract address
                 },
                 types: {
                     EIP712Domain: [
@@ -221,7 +221,16 @@ const InitiateTransaction: React.FC<InitiateTransactionProps> = ({ onClose }) =>
                 };
                 console.log(userData);
 
-                await handleAttest(signature);
+                const attestationInfo = await handleAttest(signature);
+                console.log(attestationInfo)
+                console.log("storing data on the db");
+
+                let result = await fetch(`api/store-transaction`, {
+                    method: "POST",
+                    body: JSON.stringify(userData),
+                });
+                const response = await result.json();
+
                 try {
                     console.log("entered into try block");
                     toast.success("Signed Successfully");
@@ -260,7 +269,7 @@ const InitiateTransaction: React.FC<InitiateTransactionProps> = ({ onClose }) =>
             <Header />
             <div className="w-full min-h-screen flex flex-col justify-center items-center z-[99999999]">
                 <h1 className="text-black m-5 font-bold text-4xl">Send Transaction</h1>
-                <div className="bg-white shadow-custom-light rounded-lg shadow-lg overflow-hidden w-[40em] my-8 opacity-100 transition-all duration-300 ease-in-out">
+                <div className="bg-white shadow-custom rounded-lg shadow-lg overflow-hidden w-[40em] my-8 opacity-100 transition-all duration-300 ease-in-out">
                     <div className="relative">
                         <form
                             className="mt-6 flex flex-col justify-start w-full p-6"

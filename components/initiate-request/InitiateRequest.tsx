@@ -9,8 +9,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { parseUnits, parseEther } from "viem";
 import { formSchemaLoadToken, formSchemaTransaction } from "@/utils/initiateTxFormSchema";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../common/LoadingSpinner";
 import { arbitrumSepolia } from "viem/chains";
+import CustomSelect from "../common/CustomSelect";
 
 
 
@@ -62,6 +63,7 @@ const InitiateTransaction: React.FC<InitiateTransactionProps> = ({ onClose }) =>
     };
 
     const loadTokenDetails = async () => {
+        setErrorLoadToken("")
         setErrorDisplay(false);
         const formData = {
             token: transaction.token,
@@ -261,9 +263,9 @@ const InitiateTransaction: React.FC<InitiateTransactionProps> = ({ onClose }) =>
                                 </span>
                             )}
                         </div>
-                        <div className="w-full mb-4 inputParent">
-                            <label className="text-left text-gray-700 text-xs mb-1">Select Network:</label>
-                            <select
+
+
+                        {/* <select
                                 className="w-full p-2 border rounded-lg text-black"
                                 value={selectedNetwork} // Assume you have this state variable
                                 onChange={(e) => setSelectedNetwork(e.target.value)} // Update this function as needed
@@ -271,8 +273,9 @@ const InitiateTransaction: React.FC<InitiateTransactionProps> = ({ onClose }) =>
                                 <option value="">Select Network</option>
                                 <option value="arbitrum-sepolia">Arbitrum Sepolia</option>
                                 <option value="base-sepolia">Base Sepolia</option>
-                            </select>
-                        </div>
+                            </select> */}
+                        <CustomSelect selectedOption={selectedNetwork} setSelectedOption={setSelectedNetwork} />
+
                         <div className="w-full mb-4 ">
                             <label className="text-left text-gray-700 text-xs mb-1">Do you want to send ERC-20 token?</label>
                             <div
@@ -292,39 +295,42 @@ const InitiateTransaction: React.FC<InitiateTransactionProps> = ({ onClose }) =>
                             <>
                                 <div className="w-full mb-4 ">
                                     <label className="text-left text-gray-700 text-xs mb-1">Token:</label>
-                                    <input
-                                        type="text"
-                                        name="token"
-                                        placeholder="Enter Token Address"
-                                        className={`w-full p-2 border rounded-lg text-black ${errorDisplay && errorLoadToken ? 'border-red-500' : 'border-[#2d2d2d]'}`}
-                                        value={transaction.token || ""}
-                                        onChange={handleInputChange}
-                                    />
+                                    <div className="flex flex-row gap-2">
+                                        <input
+                                            type="text"
+                                            name="token"
+                                            placeholder="Enter Token Address"
+                                            className={`w-full p-2 border rounded-lg text-black ${errorDisplay && errorLoadToken ? 'border-red-500' : 'border-[#2d2d2d]'}`}
+                                            value={transaction.token || ""}
+                                            onChange={handleInputChange}
+                                        />
+                                        {isLoadingToken ? (
+                                            <button className="flex items-center justify-center w-full bg-black text-white rounded-lg p-2 mt-2">
+                                                <LoadingSpinner />
+                                                Loading...
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={loadTokenDetails}
+                                                className="secondaryButton max-w-max bg-black text-white rounded-lg p-2 mt-2"
+                                                type="button"
+                                            >
+                                                Load Token
+                                            </button>
+                                        )}
+                                    </div>
                                     {errorDisplay && errorLoadToken && (
                                         <span className="text-red-600 text-left mt-2 text-sm">
                                             *{errorLoadToken}
                                         </span>
                                     )}
                                 </div>
-                                {isLoadingToken ? (
-                                    <button className="flex items-center justify-center w-full bg-black text-white rounded-lg p-2 mt-2">
-                                        <LoadingSpinner />
-                                        Loading...
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={loadTokenDetails}
-                                        className="load-token button-50 bg-black text-white rounded-lg p-2 mt-2"
-                                        type="button"
-                                    >
-                                        Load Token
-                                    </button>
-                                )}
+
                             </>
                         )}
 
                         {transaction.token && tokenDetails.name && (
-                            <div className="token-details text-left flex flex-col px-4 border-2 border-dashed border-[#10bb35] my-4 rounded-lg">
+                            <div className="token-details text-left flex flex-col px-4 border border-[#2d2d2d] my-4 rounded-lg">
                                 <span className="text-slate-600 text-base my-4">
                                     Name:{" "}
                                     <span className="text-black text-xl font-bold">
@@ -391,7 +397,7 @@ const InitiateTransaction: React.FC<InitiateTransactionProps> = ({ onClose }) =>
                                     <LoadingSpinner /> Loading...
                                 </button>
                             ) : (
-                                <button className="w-full bg-black text-white rounded-lg p-2" type="submit">
+                                <button className="customButton w-full bg-black text-white rounded-lg p-2" type="submit">
                                     Send
                                 </button>
                             )}

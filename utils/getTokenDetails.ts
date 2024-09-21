@@ -14,7 +14,7 @@ export interface TokenDetails {
   name?: string;
   symbol?: string;
   decimals?: string;
-  balance: bigint;
+  balance?: bigint;
 }
 
 export async function getTokenDetails(
@@ -27,6 +27,7 @@ export async function getTokenDetails(
       abi: erc20Abi.abi,
       client: publicClient,
     });
+    console.log(UsersAddress);
 
     const [name, symbol, decimals, balance] = await Promise.all([
       contract.read.name() as Promise<string>,

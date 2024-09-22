@@ -67,8 +67,8 @@ const CustomAccordion = styled(Accordion)({
   boxShadow: "none",
   borderRadius: "10px",
   "&.Mui-expanded": {
-    border: "1px solid rgb(176, 255, 201)",
-    background: "rgb(239, 255, 244)",
+    border: "1px solid #F38744",
+    background: "#FDF3EC",
   },
   "&.MuiAccordion-root": {
     borderRadius: "10px",
@@ -86,14 +86,14 @@ const CustomAccordionSummary = styled(AccordionSummary)({
     alignItems: "center",
   },
   "&:hover": {
-    border: "1px solid rgb(176, 255, 201)",
-    background: "rgb(239, 255, 244)",
+    border: "1px solid #F38744",
+    background: "#FDF3EC",
     boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.15)",
   },
   "&.Mui-expanded": {
     border: "none",
     borderBottom: "1px solid #dcdee0",
-    background: "rgb(239, 255, 244)",
+    background: "#FDF3EC",
     borderTopRightRadius: "10px",
     borderTopLeftRadius: "10px",
     borderBottomRightRadius: "0",
@@ -436,7 +436,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
   }
 
   return (
-    <div className="accordian-parent">
+    <div className="accordian-parent font-dmsans">
       {transactions.length > 0 &&
         transactions.map((transaction: Transaction, index: number) => (
           <CustomAccordion key={index} classes={"muiTopContainer"}>

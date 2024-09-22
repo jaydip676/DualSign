@@ -24,6 +24,7 @@ import {
   DataLocationOffChain,
   IndexService,
 } from "@ethsign/sp-sdk";
+import { useRouter } from "next/navigation";
 
 interface Transaction {
   sender: string;
@@ -61,6 +62,7 @@ const InitiateTransaction: React.FC = () => {
     decimals: "",
     balance: BigInt(0),
   };
+  const router = useRouter()
 
   const [tokenDetails, setTokenDetails] =
     useState<TokenDetails>(defaultTokenDetails);
@@ -239,6 +241,7 @@ const InitiateTransaction: React.FC = () => {
           console.log("entered into try block");
           toast.success("Signed Successfully");
           setIsLoading(false);
+          router.push('/dashboard')
         } catch (error) {
           toast.error("Error while signing");
           setIsLoading(false);

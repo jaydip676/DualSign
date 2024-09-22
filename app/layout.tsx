@@ -11,7 +11,8 @@ import { DM_Sans } from 'next/font/google'
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   weight: ["400", "500", "600", "700", "900"],
-  display: "swap"
+  display: "swap",
+  subsets: ['latin'],
 })
 
 const geistSans = localFont({

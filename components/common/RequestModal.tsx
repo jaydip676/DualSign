@@ -1,9 +1,11 @@
 // components/Modal.tsx
 import React from 'react';
 import { Transaction } from './TransactionAccordian';
+import LoadingSpinner from './LoadingSpinner';
 
 interface ModalProps {
     onClose: () => void;
+    isLoading: boolean;
     status: 'accept' | 'execute';
     handleRequestAccept: (secretPin: number) => Promise<void>;
     handleExecutionTx: (secretPin: number) => Promise<void>;
@@ -14,13 +16,15 @@ const RequestModal: React.FC<ModalProps> = ({
     status,
     handleRequestAccept,
     handleExecutionTx,
+    isLoading
 }) => {
     const [inputValue, setInputValue] = React.useState<number>(0);
-
+    console.log(status)
     const handleSubmit = async () => {
 
         const secretPin = inputValue;
         if (status === 'accept') {
+            console.log("accept called")
             await handleRequestAccept(secretPin);
         } else if (status === 'execute') {
             await handleExecutionTx(secretPin);
@@ -48,13 +52,17 @@ const RequestModal: React.FC<ModalProps> = ({
                 </div>
 
                 <div className="flex justify-center">
-                    <button
+                    {isLoading ? (
+                        <button className="flex items-center justify-center w-full bg-black text-white rounded-lg p-2 disabled:opacity-80 cursor-not-allowed">
+                            <LoadingSpinner /> Sending...
+                        </button>
+                    ) : (<button
                         onClick={handleSubmit}
                         // className="customButton w-full bg-black text-white rounded-lg p-2"
                         className="customButton bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600"
                     >
                         Submit
-                    </button>
+                    </button>)}
                     <button
                         onClick={onClose}
                         className="ml-2 bg-gray-300 text-gray-700 rounded px-4 py-2 hover:bg-gray-400"

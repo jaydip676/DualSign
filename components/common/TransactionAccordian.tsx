@@ -299,6 +299,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
       toast.error("Error while rejecting transaction");
     } finally {
       setIsLoading(false);
+      setpinPopup(false);
     }
   };
 
@@ -384,6 +385,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
       console.log(error);
     } finally {
       setIsLoading(false);
+      setpinPopup(false);
     }
   };
 
@@ -405,7 +407,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
       transaction.senderAddress === address &&
       transaction.status === "approved"
     ) {
-      setTxStatus("accept")
+      setTxStatus("execute")
       setSelectedTxForReceiver(index)
       setpinPopup(true)
       // await executeTransaction(transaction);
@@ -417,7 +419,7 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
       transaction.status === "inititated"
     ) {
 
-      setTxStatus("execute")
+      setTxStatus("accept")
       setSelectedTxForReceiver(index)
       setpinPopup(true)
 
@@ -575,15 +577,12 @@ const TransactionAccordion: React.FC<TransactionAccordionProps> = ({
           >
             <div style={{ textAlign: "center", width: "100%" }}>
               No transactions found for this address.
-              <div style={{ marginTop: "10px" }}>
-                To start a new request, please click on the "Initiate Request"
-                button located in the top right corner.
-              </div>
+
             </div>
           </CustomAccordionSummary>
         </CustomAccordion>
       )}
-      {pinPopup ? <RequestModal handleExecutionTx={handleExecutionTx} handleRequestAccept={handleRequestAccept} onClose={() => setpinPopup(false)} status={txStatus} /> : null}
+      {pinPopup ? <RequestModal handleExecutionTx={handleExecutionTx} isLoading={isLoading} handleRequestAccept={handleRequestAccept} onClose={() => setpinPopup(false)} status={txStatus} /> : null}
     </div>
   );
 };

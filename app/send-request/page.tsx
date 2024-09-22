@@ -110,11 +110,13 @@ const InitiateTransaction: React.FC = () => {
   };
 
   // sign protocol client
-
-  const walletClient = createWalletClient({
-    chain: arbitrumSepolia,
-    transport: custom(window ? window.ethereum : ""),
-  });
+  let walletClient: WalletClient;
+  if (typeof window !== "undefined" && window.ethereum) {
+    walletClient = createWalletClient({
+      chain: arbitrumSepolia,
+      transport: custom(window ? window.ethereum : ""),
+    });
+  }
 
   const handleAttest = async (sign: string) => {
     // Create attestation
@@ -285,8 +287,8 @@ const InitiateTransaction: React.FC = () => {
                   name="receiver"
                   placeholder="Enter Receiver's Address"
                   className={`w-full bg-transparent p-3 border rounded-lg text-black ${errorDisplay && errors?.receiver
-                      ? "border-red-500"
-                      : "border-[#2d2d2d]"
+                    ? "border-red-500"
+                    : "border-[#2d2d2d]"
                     }`}
                   value={transaction.receiver || ""}
                   onChange={handleInputChange}
@@ -318,8 +320,8 @@ const InitiateTransaction: React.FC = () => {
                 </label>
                 <div
                   className={`flex items-center cursor-pointer w-full p-3 border rounded-lg text-black ${errorDisplay && errorLoadToken
-                      ? "border-red-500"
-                      : "border-[#2d2d2d]"
+                    ? "border-red-500"
+                    : "border-[#2d2d2d]"
                     }`}
                   onClick={handleCheckboxChange}
                 >
@@ -344,8 +346,8 @@ const InitiateTransaction: React.FC = () => {
                         name="token"
                         placeholder="Enter Token Address"
                         className={`w-full bg-transparent p-3 border rounded-lg text-black ${errorDisplay && errorLoadToken
-                            ? "border-red-500"
-                            : "border-[#2d2d2d]"
+                          ? "border-red-500"
+                          : "border-[#2d2d2d]"
                           }`}
                         value={transaction.token || ""}
                         onChange={handleInputChange}
@@ -419,8 +421,8 @@ const InitiateTransaction: React.FC = () => {
                   name="amount"
                   placeholder="Enter Amount"
                   className={`w-full bg-transparent p-3 border rounded-lg text-black ${errorDisplay && errors?.amount
-                      ? "border-red-500"
-                      : "border-[#2d2d2d]"
+                    ? "border-red-500"
+                    : "border-[#2d2d2d]"
                     }`}
                   value={transaction.amount || ""}
                   onChange={handleInputChange}
@@ -440,8 +442,8 @@ const InitiateTransaction: React.FC = () => {
                   name="secretpin"
                   placeholder="Enter Secret Pin"
                   className={`w-full bg-transparent p-3 border rounded-lg text-black ${errorDisplay && errors?.secretpin
-                      ? "border-red-500"
-                      : "border-[#2d2d2d]"
+                    ? "border-red-500"
+                    : "border-[#2d2d2d]"
                     }`}
                   value={secretPin || ""}
                   onChange={(e) => setSecretPin(e.target.valueAsNumber)}

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { getTokenDetails, TokenDetails } from "@/utils/getTokenDetails";
 import { useAccount } from "wagmi";
-import { formatUnits, Address } from "viem";
+import { formatUnits, Address, WalletClient } from "viem";
 import { createWalletClient, custom } from "viem";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

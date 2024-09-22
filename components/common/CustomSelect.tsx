@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import React, { FC } from 'react';
 import { TbBackground } from 'react-icons/tb';
-import Select, { OptionTypeBase } from 'react-select';
+import Select from 'react-select';
 
 interface Option {
     value: string;
@@ -43,7 +43,7 @@ const CustomSelect: FC<CustomSelectProps> = ({ selectedOption, setSelectedOption
             <Select<Option>
                 options={options}
                 value={options.find(option => option.value === selectedOption)}
-                onChange={(selected: OptionTypeBase | null) => {
+                onChange={(selected: any) => {
                     if (selected) {
                         setSelectedOption(selected.value);
                     }

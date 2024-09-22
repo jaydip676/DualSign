@@ -6,6 +6,13 @@ import { Providers } from "./providers";
 import '@rainbow-me/rainbowkit/styles.css';
 import { ApolloProvider } from "@apollo/client";
 import client from "@/lib/apolloClient";
+import { DM_Sans } from 'next/font/google'
+
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  weight: ["400", "500", "600", "700", "900"],
+  display: "swap"
+})
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${dmSans.variable} antialiased`}
       >
         <Providers>{children}</Providers>
       </body>

@@ -11,9 +11,13 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        orange: "#F38744",
       },
       boxShadow: {
         custom: "rgba(0, 0, 0, 0.4) 0px 30px 90px",
+      },
+      fontFamily: {
+        dmsans: ["var(--font-dm-sans)"],
       },
     },
   },

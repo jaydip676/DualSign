@@ -4,8 +4,10 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import { useAccount } from 'wagmi';
 
 const Header: React.FC = () => {
+    const { isConnected } = useAccount()
     return (
         <header className="bg-white shadow-md py-4">
             <div className="container mx-auto flex justify-between items-center px-4">
@@ -21,11 +23,16 @@ const Header: React.FC = () => {
                 </div>
 
                 {/* Action Button */}
-                <div>
+                <div className="flex items-center gap-4">
+                    {isConnected ?
+                        <div className='flex items-center gap-4'>
+                            <Link className="text-gray-700 hover:text-black hover:font-semibold" href="/send-request" >Send Token</Link>
+                            <Link className="text-gray-700 hover:text-black hover:font-semibold" href="/dashboard" >Dashboard</Link>
+                        </div> : null}
                     <ConnectButton />
                 </div>
             </div>
-        </header>
+        </header >
     );
 };
 
